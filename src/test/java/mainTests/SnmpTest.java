@@ -14,6 +14,7 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.testng.annotations.Test;
 
 public class SnmpTest {
 
@@ -23,7 +24,7 @@ public class SnmpTest {
     public SnmpTest(String add) {
         address = add;
     }
-
+    @Test
     public static void main(String[] args) throws IOException {
         SnmpTest client = new SnmpTest("udp:192.168.200.233/161");
         client.start();
