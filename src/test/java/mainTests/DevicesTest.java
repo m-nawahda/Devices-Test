@@ -14,8 +14,12 @@ public class DevicesTest {
         connection = new connectionHelper();
     }
 
+//    @Test
+//    public void readResponse() throws IOException, JSchException {
+//        connection.readResponse("ifconfig");
+//    }
     @Test
-    public void readResponse() throws IOException, JSchException {
-        connection.readResponse("ifconfig");
+    public void readResponseViaSnmp() throws IOException, JSchException {
+        connection.readResponse("snmpwalk -v2c -cpublic1 192.168.200.233 1.3.6.1.2.1.1.5");
     }
 }

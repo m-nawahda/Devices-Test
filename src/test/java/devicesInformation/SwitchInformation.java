@@ -1,10 +1,12 @@
 package devicesInformation;
 
 
- public class SwitchInformation {
-     private static String host="192.168.200.233";
-     private static String user="user1";
-     private static String password="user@321";
+import com.jcraft.jsch.UserInfo;
+
+public class SwitchInformation  {
+     private static String host="192.168.200.91";
+     private static String user="root";
+         private static String password="root";
 
      public String getHost() {
          return host;

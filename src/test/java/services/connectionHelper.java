@@ -35,9 +35,9 @@ public class connectionHelper {
         ((ChannelExec) channel).setCommand(command);
         channel.setInputStream(null);
         ((ChannelExec) channel).setErrStream(System.err);
-
         in = channel.getInputStream();
         channel.connect();
+        System.out.println("Channel connected");
     }
 
     public void readResponse(String command) throws JSchException, IOException {
