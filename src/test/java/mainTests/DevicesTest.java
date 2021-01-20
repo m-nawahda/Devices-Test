@@ -1,11 +1,9 @@
 package mainTests;
 
-import com.jcraft.jsch.*;
-import org.testng.annotations.Test;
 import services.connectionHelper;
-
+import org.snmp4j.smi.OID;
+import org.testng.annotations.Test;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class DevicesTest {
     connectionHelper connection;
@@ -14,12 +12,21 @@ public class DevicesTest {
         connection = new connectionHelper();
     }
 
-//    @Test
+    //    @Test
 //    public void readResponse() throws IOException, JSchException {
 //        connection.readResponse("ifconfig");
 //    }
+//    @Test
+//    public void readResponseViaSnmp() throws IOException, JSchException {
+//        // connection.readResponse("snmpwalk -v2c -cpublic1 192.168.200.233 1.3.6.1.2.1.1.5");
+//    }
+
     @Test
-    public void readResponseViaSnmp() throws IOException, JSchException {
-       // connection.readResponse("snmpwalk -v2c -cpublic1 192.168.200.233 1.3.6.1.2.1.1.5");
+    public void testSnmp() throws IOException {
+        SnmpTest client = new SnmpTest("udp:192.168.200.233/161");
+        client.start();
+
+        String sysDescr = client.getAsString(new OID("1.3.6.1.2.1.1.5"));
+        System.out.println(sysDescr);
     }
 }

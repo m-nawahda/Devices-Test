@@ -14,7 +14,7 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
-import org.testng.annotations.Test;
+
 
 public class SnmpTest {
 
@@ -24,17 +24,8 @@ public class SnmpTest {
     public SnmpTest(String add) {
         address = add;
     }
-    @Test
-    public static void main(String[] args) throws IOException {
-        SnmpTest client = new SnmpTest("udp:192.168.200.233/161");
-        client.start();
 
-        String sysDescr = client.getAsString(new OID(".1.3.6.1.2.1.1.5.0"));
-        System.out.println(sysDescr);
-    }
-
-
-    private void start() throws IOException {
+    void start() throws IOException {
         TransportMapping transport = new DefaultUdpTransportMapping();
         snmp = new Snmp(transport);
         transport.listen();
@@ -47,7 +38,7 @@ public class SnmpTest {
         return event.getResponse().get(0).getVariable().toString();
     }
 
-    public ResponseEvent get(OID oids[]) throws IOException {
+    public ResponseEvent get(OID[] oids) throws IOException {
         PDU pdu = new PDU();
         for (OID oid : oids) {
             pdu.add(new VariableBinding(oid));
