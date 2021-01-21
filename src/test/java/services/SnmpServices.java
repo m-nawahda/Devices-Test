@@ -1,4 +1,4 @@
-package mainTests;
+package services;
 
 import java.io.IOException;
 
@@ -16,53 +16,43 @@ import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 
-public class SnmpTest {
+public class SnmpServices {
 
     Snmp snmp = null;
     String address;
 
-    public SnmpTest(String add) {
+    public SnmpServices(String add) {
         address = add;
     }
 
-    void start() throws IOException {
+    public void start() throws IOException {
         TransportMapping transport = new DefaultUdpTransportMapping();
         snmp = new Snmp(transport);
         transport.listen();
     }
 
-    public String getAsString(OID oid) throws IOException {
-        ResponseEvent event = get(new OID[]{oid});
-        if (event.getResponse() == null)
-            System.out.println("here");
-        return event.getResponse().get(0).getVariable().toString();
-    }
-
-    public ResponseEvent get(OID[] oids) throws IOException {
+    public String readResponse(OID oid) throws IOException {
+        OID[] oids = new OID[]{oid};
         PDU pdu = new PDU();
-        for (OID oid : oids) {
-            pdu.add(new VariableBinding(oid));
+        for (OID oidObj : oids) {
+            pdu.add(new VariableBinding(oidObj));
         }
         pdu.setType(PDU.GET);
         Target target = getTarget();
-        System.out.println(target.toString());
         ResponseEvent event = snmp.send(pdu, target, null);
-        //ResponseEvent event = snmp.get(pdu,target);
-        if (event != null) {
-            return event;
 
-        }
-        throw new RuntimeException("GET timed out");
+        return event.getResponse().get(0).getVariable().toString();
     }
 
-
     private Target getTarget() {
+        System.out.println("try to set community target");
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString("public1"));
         target.setAddress(GenericAddress.parse(address));
-        target.setRetries(2);
-        target.setTimeout(2500);
+        target.setRetries(4);
+        target.setTimeout(3500);
         target.setVersion(SnmpConstants.version2c);
+        System.out.println("Success setting community target");
         return target;
     }
 

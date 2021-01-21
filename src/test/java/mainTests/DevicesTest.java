@@ -1,32 +1,44 @@
 package mainTests;
 
-import services.connectionHelper;
+import com.jcraft.jsch.JSchException;
+import devicesInformation.ServerInformation;
+import devicesInformation.SwitchInformation;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import services.SnmpServices;
+import services.SSHServices;
 import org.snmp4j.smi.OID;
 import org.testng.annotations.Test;
+import services.TestServices;
+
 import java.io.IOException;
 
 public class DevicesTest {
-    connectionHelper connection;
+    TestServices services;
 
     DevicesTest() {
-        connection = new connectionHelper();
+        services = new TestServices();
     }
 
-    //    @Test
-//    public void readResponse() throws IOException, JSchException {
-//        connection.readResponse("ifconfig");
-//    }
-//    @Test
-//    public void readResponseViaSnmp() throws IOException, JSchException {
-//        // connection.readResponse("snmpwalk -v2c -cpublic1 192.168.200.233 1.3.6.1.2.1.1.5");
-//    }
-
+    @BeforeClass
+    public void checkAccessibility() {
+        String ipSwitchAddress = SwitchInformation.host;
+        System.out.println("Try connect to the Switch... ");
+        Assert.assertTrue(services.isPingable(ipSwitchAddress), "Switch is NOT reachable.");
+        System.out.println("Switch is reachable.");
+        String ipServerAddress = ServerInformation.host;
+        System.out.println("Try connect to the Server... ");
+        Assert.assertTrue(services.isPingable(ipServerAddress), "Server is NOT reachable.");
+        System.out.println("Server is reachable.");
+    }
     @Test
-    public void testSnmp() throws IOException {
-        SnmpTest client = new SnmpTest("udp:192.168.200.233/161");
-        client.start();
-
-        String sysDescr = client.getAsString(new OID("1.3.6.1.2.1.1.5"));
-        System.out.println(sysDescr);
+    public void testMatching() throws IOException, JSchException {
+        String snmpResponse = services.readResponseViaSnmp();
+        String serverResponse = services.readResponseViaServer();
+        System.out.println("Server Response is : "+ serverResponse);
+        System.out.println("SNMP Response is : "+ snmpResponse);
+        Assert.assertEquals(snmpResponse,serverResponse,"the response from SNMP doesn't match with the response from the server..");
+        System.out.println("the response from SNMP is match with the response from the server..");
     }
+
 }

@@ -1,9 +1,9 @@
 package devicesInformation;
 
-public class SwitchInformation {
-    public static String host = "192.168.200.233";
-    private static String user = "user1";
-    private static String password = "user@321";
+public class ServerInformation {
+    public static String host = "192.168.200.91";
+    private static String user = "root";
+    private static String password = "root";
 
     public String getHost() {
         return host;
